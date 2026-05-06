@@ -1,21 +1,44 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import "./MainLayout.css";
 
 export default function MainLayout() {
-  return (
-    <div className="min-h-screen bg-slate-900 text-slate-100">
-      
-      {/* NAVBAR */}
-      <nav className="bg-slate-800/80 backdrop-blur border-b border-white/10 px-6 py-4 flex gap-6 shadow-lg shadow-black/20">
-        <Link to="/dashboard" className="font-medium hover:text-indigo-400 transition">
-          Dashboard
-        </Link>
-        <Link to="/tickets" className="font-medium hover:text-indigo-400 transition">
-          Tickets
-        </Link>
-      </nav>
+  const navigate = useNavigate();
 
-      {/* CONTENIDO */}
-      <main className="p-6">
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/");
+  }, []);
+
+  return (
+    <div className="app-shell">
+      <aside className="app-sidebar">
+        <h2 className="app-brand">SupportFlow</h2>
+        <nav className="app-nav">
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="app-nav-btn"
+          >
+            Dashboard
+          </button>
+
+          <button
+            onClick={() => navigate("/tickets")}
+            className="app-nav-btn"
+          >
+            Tickets
+          </button>
+
+          <button
+            onClick={() => navigate("/tickets/new")}
+            className="app-nav-btn"
+          >
+            Crear Ticket
+          </button>
+        </nav>
+      </aside>
+
+      <main className="app-content">
         <Outlet />
       </main>
     </div>

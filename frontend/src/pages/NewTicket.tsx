@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./AppPages.css";
 
 export default function NewTicket() {
   const navigate = useNavigate();
@@ -38,15 +39,15 @@ export default function NewTicket() {
   }
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow p-6 rounded-lg">
-      <h1 className="text-3xl font-bold mb-6">Crear nuevo ticket</h1>
+    <div className="glass-card form-card">
+      <h1 className="page-title">Crear nuevo ticket</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block font-medium mb-1">Título</label>
+      <form onSubmit={handleSubmit} className="form-stack">
+        <div className="form-group">
+          <label className="form-label">Título</label>
           <input
             type="text"
-            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            className="dark-field"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ej: Error al iniciar sesión"
@@ -54,10 +55,10 @@ export default function NewTicket() {
           />
         </div>
 
-        <div>
-          <label className="block font-medium mb-1">Prioridad</label>
+        <div className="form-group">
+          <label className="form-label">Prioridad</label>
           <select
-            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            className="dark-field"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
           >
@@ -67,10 +68,10 @@ export default function NewTicket() {
           </select>
         </div>
 
-        <div>
-          <label className="block font-medium mb-1">Descripción</label>
+        <div className="form-group">
+          <label className="form-label">Descripción</label>
           <textarea
-            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            className="dark-field"
             rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -79,10 +80,7 @@ export default function NewTicket() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-        >
+        <button type="submit" className="primary-btn">
           Crear ticket
         </button>
       </form>

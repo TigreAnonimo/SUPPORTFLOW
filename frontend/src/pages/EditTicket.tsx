@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import "./AppPages.css";
 
 export default function EditTicket() {
   const { id } = useParams();
@@ -47,28 +48,28 @@ export default function EditTicket() {
     }
   }
 
-  if (loading) return <p>Cargando...</p>;
+  if (loading) return <p className="form-help">Cargando...</p>;
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow p-6 rounded-lg">
-      <h1 className="text-3xl font-bold mb-6">Editar Ticket #{id}</h1>
+    <div className="glass-card form-card">
+      <h1 className="page-title">Editar Ticket #{id}</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block font-medium mb-1">Título</label>
+      <form onSubmit={handleSubmit} className="form-stack">
+        <div className="form-group">
+          <label className="form-label">Título</label>
           <input
             type="text"
-            className="w-full border rounded-lg px-3 py-2"
+            className="dark-field"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
 
-        <div>
-          <label className="block font-medium mb-1">Prioridad</label>
+        <div className="form-group">
+          <label className="form-label">Prioridad</label>
           <select
-            className="w-full border rounded-lg px-3 py-2"
+            className="dark-field"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
           >
@@ -78,10 +79,10 @@ export default function EditTicket() {
           </select>
         </div>
 
-        <div>
-          <label className="block font-medium mb-1">Descripción</label>
+        <div className="form-group">
+          <label className="form-label">Descripción</label>
           <textarea
-            className="w-full border rounded-lg px-3 py-2"
+            className="dark-field"
             rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -89,10 +90,7 @@ export default function EditTicket() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-        >
+        <button type="submit" className="primary-btn">
           Guardar cambios
         </button>
       </form>

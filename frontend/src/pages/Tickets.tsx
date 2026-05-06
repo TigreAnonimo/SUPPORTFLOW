@@ -1,103 +1,107 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./AppPages.css";
+
+interface Ticket {
+  id: number;
+  title: string;
+  status: "open" | "closed" | "pending";
+  priority: "low" | "medium" | "high";
+  date: string;
+}
 
 export default function Tickets() {
-  const [tickets, setTickets] = useState([]);
+  const navigate = useNavigate();
 
+  // Datos mock por ahora (luego los conectamos al backend)
+  const [tickets] = useState<Ticket[]>([
+    {
+      id: 1,
+      title: "Error en login",
+      status: "open",
+      priority: "high",
+      date: "2024-05-01",
+    },
+    {
+      id: 2,
+      title: "No carga el dashboard",
+      status: "pending",
+      priority: "medium",
+      date: "2024-05-02",
+    },
+    {
+      id: 3,
+      title: "Problema con notificaciones",
+      status: "closed",
+      priority: "low",
+      date: "2024-05-03",
+    },
+  ]);
+
+  // Validación de sesión
   useEffect(() => {
-    fetch("http://localhost:3000/api/tickets")
-      .then((res) => res.json())
-      .then((data) => setTickets(data))
-      .catch((err) => console.error("Error cargando tickets:", err));
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/");
   }, []);
-
-  // ⭐ FUNCIÓN PARA ELIMINAR
-  async function handleDelete(id: number) {
-    const confirmDelete = window.confirm("¿Seguro que deseas eliminar este ticket?");
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(`http://localhost:3000/api/tickets/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) throw new Error("Error al eliminar");
-
-      // Actualizar tabla sin recargar
-      setTickets((prev) => prev.filter((t: any) => t.id !== id));
-    } catch (error) {
-      console.error(error);
-      alert("Hubo un problema al eliminar el ticket");
-    }
-  }
 
   return (
     <div>
-      <div className="flex justify-between mb-4">
-        <h1 className="text-3xl font-bold">Tickets</h1>
-
-        <Link
-          to="/tickets/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
-          Nuevo Ticket
-        </Link>
+      <div className="page-header">
+        <h1 className="page-title">Tickets</h1>
+        <button onClick={() => navigate("/tickets/new")} className="primary-btn">
+          Crear Ticket
+        </button>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-100 border-b">
+      <div className="glass-card tickets-table-wrap">
+        <table className="tickets-table">
+          <thead>
             <tr>
-              <th className="p-3">ID</th>
-              <th className="p-3">Título</th>
-              <th className="p-3">Estado</th>
-              <th className="p-3">Prioridad</th>
-              <th className="p-3">Acciones</th>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Estado</th>
+              <th>Prioridad</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
             </tr>
           </thead>
 
           <tbody>
-            {tickets.map((t: any) => (
-              <tr key={t.id} className="border-b hover:bg-gray-50">
-                <td className="p-3">{t.id}</td>
-                <td className="p-3">{t.title}</td>
-                <td className="p-3">{t.status}</td>
-                <td className="p-3">{t.priority}</td>
-
-                {/* ⭐⭐⭐ ACCIONES COMPLETAS ⭐⭐⭐ */}
-                <td className="p-3 flex gap-3">
-                  <Link
-                    to={`/tickets/${t.id}`}
-                    className="text-blue-600 hover:underline"
+            {tickets.map((ticket) => (
+              <tr key={ticket.id}>
+                <td>{ticket.id}</td>
+                <td>{ticket.title}</td>
+                <td>
+                  <span className={`pill pill-${ticket.status}`}>{ticket.status}</span>
+                </td>
+                <td>
+                  <span className={`pill pill-${ticket.priority}`}>{ticket.priority}</span>
+                </td>
+                <td>{ticket.date}</td>
+                <td className="row-actions">
+                  <button
+                    onClick={() => navigate(`/tickets/${ticket.id}`)}
+                    className="action-link"
                   >
-                    Ver detalle
-                  </Link>
-
-                  <Link
-                    to={`/tickets/edit/${t.id}`}
-                    className="text-green-600 hover:underline"
-                  >
-                    Editar
-                  </Link>
+                    Ver
+                  </button>
 
                   <button
-                    onClick={() => handleDelete(t.id)}
-                    className="text-red-600 hover:underline"
+                    onClick={() => navigate(`/tickets/edit/${ticket.id}`)}
+                    className="action-link"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    onClick={() => alert("Eliminar ticket " + ticket.id)}
+                    className="action-link"
                   >
                     Eliminar
                   </button>
                 </td>
-                {/* ⭐⭐⭐ FIN ACCIONES ⭐⭐⭐ */}
               </tr>
             ))}
-
-            {tickets.length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-4 text-center text-gray-500">
-                  No hay tickets todavía
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
