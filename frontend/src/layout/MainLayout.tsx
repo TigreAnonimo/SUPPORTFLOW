@@ -10,6 +10,13 @@ export default function MainLayout() {
     if (!token) navigate("/");
   }, []);
 
+  // Cierra la sesión local y regresa a la pantalla de acceso.
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("sf_current_user");
+    navigate("/");
+  };
+
   return (
     <div className="app-shell">
       <aside className="app-sidebar">
@@ -36,6 +43,10 @@ export default function MainLayout() {
             Crear Ticket
           </button>
         </nav>
+
+        <button onClick={handleLogout} className="app-logout-btn">
+          Cerrar sesión
+        </button>
       </aside>
 
       <main className="app-content">

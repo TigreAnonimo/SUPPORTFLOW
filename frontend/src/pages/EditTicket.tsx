@@ -6,6 +6,7 @@ export default function EditTicket() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // Estado del formulario pre-cargado con la data actual del ticket.
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("open");
@@ -34,6 +35,7 @@ export default function EditTicket() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Payload con los campos editables del ticket.
     const updatedTicket = {
       title,
       description,
@@ -61,6 +63,7 @@ export default function EditTicket() {
     }
   };
 
+  // Formulario de edición para actualizar información del ticket.
   return (
     <div className="glass-card form-card max-w-xl mx-auto p-8 rounded-2xl shadow-lg">
       <h1 className="page-title mb-6 text-center">Editar Ticket</h1>

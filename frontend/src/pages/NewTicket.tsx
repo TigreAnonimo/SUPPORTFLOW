@@ -5,14 +5,17 @@ import "./AppPages.css";
 export default function NewTicket() {
   const navigate = useNavigate();
 
+  // Estado del formulario para crear un ticket nuevo.
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("open");
   const [priority, setPriority] = useState("medium");
 
+  // Envía el formulario al backend y, si todo sale bien, vuelve al listado.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Payload que espera el endpoint de creación.
     const newTicket = {
       title,
       description,
@@ -40,30 +43,31 @@ export default function NewTicket() {
     }
   };
 
+  // Estructura visual del formulario con campos principales del ticket.
   return (
     <div className="glass-card form-card">
       <h1 className="page-title">Crear Ticket</h1>
 
       <form onSubmit={handleSubmit} className="ticket-form">
         <div>
-        <label>Título</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Ej. Error de acceso al panel de cliente"
-          required
-        />
+          <label>Título</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Ej. Error de acceso al panel de cliente"
+            required
+          />
         </div>
 
         <div>
-        <label>Descripción</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe el problema con el mayor detalle posible..."
-          required
-        />
+          <label>Descripción</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe el problema con el mayor detalle posible..."
+            required
+          />
         </div>
 
         <div className="ticket-form-row">

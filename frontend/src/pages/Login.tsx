@@ -2,28 +2,15 @@ import "./Login.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface UserAccount {
-  name: string;
-  email: string;
-  password: string;
-}
-
 export default function Login() {
   const navigate = useNavigate();
+
   const [isRegisterMode, setIsRegisterMode] = useState(false);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const getUsers = (): UserAccount[] => {
-    const rawUsers = localStorage.getItem("sf_users");
-    return rawUsers ? JSON.parse(rawUsers) : [];
-  };
-
-  const saveUsers = (users: UserAccount[]) => {
-    localStorage.setItem("sf_users", JSON.stringify(users));
-  };
 
   const resetFields = () => {
     setName("");
@@ -32,22 +19,42 @@ export default function Login() {
     setConfirmPassword("");
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  // ⭐ LOGIN REAL (con backend)
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const users = getUsers();
-    const user = users.find((item) => item.email === email && item.password === password);
 
-    if (!user) {
-      alert("Credenciales incorrectas o usuario no registrado.");
-      return;
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Credenciales incorrectas.");
+        return;
+      }
+
+      // Guardar token real
+      localStorage.setItem("token", data.token);
+
+      // Guardar email del usuario
+      localStorage.setItem("sf_current_user", email.trim().toLowerCase());
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor.");
     }
-
-    localStorage.setItem("token", "user-session-token");
-    localStorage.setItem("sf_current_user", JSON.stringify(user));
-    navigate("/dashboard");
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  // ⭐ REGISTRO REAL (con backend)
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name.trim() || !email.trim() || !password.trim()) {
@@ -60,23 +67,30 @@ export default function Login() {
       return;
     }
 
-    const users = getUsers();
-    const userExists = users.some((item) => item.email === email);
-    if (userExists) {
-      alert("Ya existe una cuenta con ese correo.");
-      return;
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Error al registrar usuario");
+        return;
+      }
+
+      alert("Cuenta creada correctamente. Ahora inicia sesión.");
+      resetFields();
+      setIsRegisterMode(false);
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor.");
     }
-
-    const newUser: UserAccount = {
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      password,
-    };
-
-    saveUsers([...users, newUser]);
-    alert("Cuenta creada correctamente. Ahora inicia sesion.");
-    resetFields();
-    setIsRegisterMode(false);
   };
 
   const GOOGLE_SIGNUP_URL = "https://accounts.google.com/signup";
@@ -88,9 +102,15 @@ export default function Login() {
         <div className="login-logo">
           <span>SF</span>
         </div>
-        <h1 className="login-title">{isRegisterMode ? "Crear cuenta" : "Bienvenido"}</h1>
+
+        <h1 className="login-title">
+          {isRegisterMode ? "Crear cuenta" : "Bienvenido"}
+        </h1>
+
         <p className="login-subtitle">
-          {isRegisterMode ? "Registra tu cuenta para empezar" : "Inicia sesion en tu cuenta"}
+          {isRegisterMode
+            ? "Registra tu cuenta para empezar"
+            : "Inicia sesión en tu cuenta"}
         </p>
 
         <form onSubmit={isRegisterMode ? handleRegister : handleLogin}>
@@ -162,14 +182,19 @@ export default function Login() {
               <button
                 className="social-btn"
                 type="button"
-                onClick={() => window.open(GOOGLE_SIGNUP_URL, "_blank", "noopener,noreferrer")}
+                onClick={() =>
+                  window.open(GOOGLE_SIGNUP_URL, "_blank", "noopener,noreferrer")
+                }
               >
                 Google
               </button>
+
               <button
                 className="social-btn"
                 type="button"
-                onClick={() => window.open(GITHUB_SIGNUP_URL, "_blank", "noopener,noreferrer")}
+                onClick={() =>
+                  window.open(GITHUB_SIGNUP_URL, "_blank", "noopener,noreferrer")
+                }
               >
                 GitHub
               </button>

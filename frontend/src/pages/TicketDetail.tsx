@@ -6,9 +6,11 @@ export default function TicketDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // Estado del ticket cargado y bandera para manejar estado de carga.
   const [ticket, setTicket] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Carga la información de un ticket específico por ID.
   useEffect(() => {
     fetch(`http://localhost:3000/api/tickets/${id}`)
       .then((res) => res.json())
@@ -23,6 +25,7 @@ export default function TicketDetail() {
       });
   }, [id]);
 
+  // Estados de UI para carga o ausencia de datos.
   if (loading) {
     return <p className="text-gray-500">Cargando ticket...</p>;
   }
@@ -31,6 +34,7 @@ export default function TicketDetail() {
     return <p className="text-red-500">Ticket no encontrado</p>;
   }
 
+  // Vista detallada del ticket con navegación de regreso y edición.
   return (
     <div className="glass-card max-w-2xl mx-auto p-8 rounded-2xl shadow-lg">
       <h1 className="page-title mb-6 text-center">

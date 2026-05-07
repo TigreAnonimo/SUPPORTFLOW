@@ -12,6 +12,7 @@ interface Ticket {
 
 export default function Tickets() {
   const navigate = useNavigate();
+  // Lista de tickets mostrada en la tabla principal.
   const [tickets, setTickets] = useState<Ticket[]>([]);
 
   // Obtener tickets reales del backend
@@ -63,6 +64,7 @@ export default function Tickets() {
     }
   };
 
+  // Vista de listado con acciones rápidas por ticket.
   return (
     <div>
       <div className="page-header">
@@ -109,27 +111,28 @@ export default function Tickets() {
                 <td className="p-3">{ticket.date}</td>
 
                 <td className="p-3">
+                  {/* Acciones disponibles para cada fila del listado */}
                   <div className="row-actions">
-                  <button
-                    onClick={() => navigate(`/tickets/${ticket.id}`)}
-                    className="action-link"
-                  >
-                    Ver
-                  </button>
+                    <button
+                      onClick={() => navigate(`/tickets/${ticket.id}`)}
+                      className="action-link"
+                    >
+                      Ver
+                    </button>
 
-                  <button
-                    onClick={() => navigate(`/tickets/edit/${ticket.id}`)}
-                    className="action-link"
-                  >
-                    Editar
-                  </button>
+                    <button
+                      onClick={() => navigate(`/tickets/edit/${ticket.id}`)}
+                      className="action-link"
+                    >
+                      Editar
+                    </button>
 
-                  <button
-                    onClick={() => handleDelete(ticket.id)}
-                    className="action-link text-red-600 hover:text-red-800"
-                  >
-                    Eliminar
-                  </button>
+                    <button
+                      onClick={() => handleDelete(ticket.id)}
+                      className="action-link text-red-600 hover:text-red-800"
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </td>
               </tr>

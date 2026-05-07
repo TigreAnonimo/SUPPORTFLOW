@@ -31,22 +31,22 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 text-slate-100">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 bg-white shadow rounded-lg border-l-4 border-blue-500">
-          <h2 className="text-xl font-semibold">Tickets abiertos</h2>
-          <p className="text-4xl font-bold mt-2 text-blue-600">{stats.open}</p>
+        <div className="p-6 bg-white shadow rounded-lg border-l-4 border-blue-600">
+          <h2 className="text-xl font-semibold text-slate-800">Tickets abiertos</h2>
+          <p className="text-4xl font-extrabold mt-2 text-blue-800">{stats.open}</p>
         </div>
 
-        <div className="p-6 bg-white shadow rounded-lg border-l-4 border-green-500">
-          <h2 className="text-xl font-semibold">Tickets cerrados</h2>
-          <p className="text-4xl font-bold mt-2 text-green-600">{stats.closed}</p>
+        <div className="p-6 bg-white shadow rounded-lg border-l-4 border-green-600">
+          <h2 className="text-xl font-semibold text-slate-800">Tickets cerrados</h2>
+          <p className="text-4xl font-extrabold mt-2 text-green-800">{stats.closed}</p>
         </div>
 
-        <div className="p-6 bg-white shadow rounded-lg border-l-4 border-yellow-500">
-          <h2 className="text-xl font-semibold">Pendientes</h2>
-          <p className="text-4xl font-bold mt-2 text-yellow-600">{stats.pending}</p>
+        <div className="p-6 bg-white shadow rounded-lg border-l-4 border-amber-600">
+          <h2 className="text-xl font-semibold text-slate-800">Pendientes</h2>
+          <p className="text-4xl font-extrabold mt-2 text-amber-800">{stats.pending}</p>
         </div>
       </div>
     </div>
