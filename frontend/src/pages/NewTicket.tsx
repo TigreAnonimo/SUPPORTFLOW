@@ -6,16 +6,18 @@ export default function NewTicket() {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState("Media");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("open");
+  const [priority, setPriority] = useState("medium");
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newTicket = {
       title,
-      priority,
       description,
+      status,
+      priority,
     };
 
     try {
@@ -34,54 +36,46 @@ export default function NewTicket() {
       navigate("/tickets");
     } catch (error) {
       console.error(error);
-      alert("Hubo un problema al crear el ticket");
+      alert("Hubo un error al crear el ticket");
     }
-  }
+  };
 
   return (
     <div className="glass-card form-card">
-      <h1 className="page-title">Crear nuevo ticket</h1>
+      <h1 className="page-title">Crear Ticket</h1>
 
-      <form onSubmit={handleSubmit} className="form-stack">
-        <div className="form-group">
-          <label className="form-label">Título</label>
-          <input
-            type="text"
-            className="dark-field"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ej: Error al iniciar sesión"
-            required
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="form">
+        <label>Título</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
 
-        <div className="form-group">
-          <label className="form-label">Prioridad</label>
-          <select
-            className="dark-field"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option>Alta</option>
-            <option>Media</option>
-            <option>Baja</option>
-          </select>
-        </div>
+        <label>Descripción</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
 
-        <div className="form-group">
-          <label className="form-label">Descripción</label>
-          <textarea
-            className="dark-field"
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe el problema..."
-            required
-          />
-        </div>
+        <label>Estado</label>
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="open">Abierto</option>
+          <option value="pending">Pendiente</option>
+          <option value="closed">Cerrado</option>
+        </select>
+
+        <label>Prioridad</label>
+        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+          <option value="low">Baja</option>
+          <option value="medium">Media</option>
+          <option value="high">Alta</option>
+        </select>
 
         <button type="submit" className="primary-btn">
-          Crear ticket
+          Crear Ticket
         </button>
       </form>
     </div>

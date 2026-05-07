@@ -7,42 +7,61 @@ interface Ticket {
   title: string;
   status: "open" | "closed" | "pending";
   priority: "low" | "medium" | "high";
-  date: string;
+  date?: string;
 }
 
 export default function Tickets() {
   const navigate = useNavigate();
+  const [tickets, setTickets] = useState<Ticket[]>([]);
 
-  // Datos mock por ahora (luego los conectamos al backend)
-  const [tickets] = useState<Ticket[]>([
-    {
-      id: 1,
-      title: "Error en login",
-      status: "open",
-      priority: "high",
-      date: "2024-05-01",
-    },
-    {
-      id: 2,
-      title: "No carga el dashboard",
-      status: "pending",
-      priority: "medium",
-      date: "2024-05-02",
-    },
-    {
-      id: 3,
-      title: "Problema con notificaciones",
-      status: "closed",
-      priority: "low",
-      date: "2024-05-03",
-    },
-  ]);
+  // Obtener tickets reales del backend
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/tickets");
+        const data = await res.json();
+
+        const formatted = data.map((t: any) => ({
+          ...t,
+          date: t.created_at?.split("T")[0] ?? "N/A",
+        }));
+
+        setTickets(formatted);
+      } catch (error) {
+        console.error("Error al obtener tickets:", error);
+      }
+    };
+
+    fetchTickets();
+  }, []);
 
   // Validación de sesión
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/");
   }, []);
+
+  // Eliminar ticket (DELETE)
+  const handleDelete = async (id: number) => {
+    const confirmDelete = confirm("¿Seguro que deseas eliminar este ticket?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/tickets/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Error al eliminar el ticket");
+      }
+
+      // Actualizar tabla sin recargar
+      setTickets((prev) => prev.filter((t) => t.id !== id));
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al eliminar el ticket");
+    }
+  };
 
   return (
     <div>
@@ -71,13 +90,21 @@ export default function Tickets() {
               <tr key={ticket.id}>
                 <td>{ticket.id}</td>
                 <td>{ticket.title}</td>
+
                 <td>
-                  <span className={`pill pill-${ticket.status}`}>{ticket.status}</span>
+                  <span className={`pill pill-${ticket.status}`}>
+                    {ticket.status}
+                  </span>
                 </td>
+
                 <td>
-                  <span className={`pill pill-${ticket.priority}`}>{ticket.priority}</span>
+                  <span className={`pill pill-${ticket.priority}`}>
+                    {ticket.priority}
+                  </span>
                 </td>
+
                 <td>{ticket.date}</td>
+
                 <td className="row-actions">
                   <button
                     onClick={() => navigate(`/tickets/${ticket.id}`)}
@@ -94,7 +121,7 @@ export default function Tickets() {
                   </button>
 
                   <button
-                    onClick={() => alert("Eliminar ticket " + ticket.id)}
+                    onClick={() => handleDelete(ticket.id)}
                     className="action-link"
                   >
                     Eliminar

@@ -3,95 +3,121 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./AppPages.css";
 
 export default function EditTicket() {
-  const { id } = useParams();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState("Media");
   const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState("open");
+  const [priority, setPriority] = useState("medium");
 
-  // Cargar datos del ticket
+  // Obtener ticket existente
   useEffect(() => {
-    fetch(`http://localhost:3000/api/tickets/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTitle(data.title);
-        setPriority(data.priority);
-        setDescription(data.description);
-        setLoading(false);
-      })
-      .catch((err) => console.error("Error cargando ticket:", err));
+    const fetchTicket = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/tickets/${id}`);
+        const data = await res.json();
+
+        setTitle(data[0].title);
+        setDescription(data[0].description);
+        setStatus(data[0].status);
+        setPriority(data[0].priority);
+      } catch (error) {
+        console.error("Error al cargar ticket:", error);
+      }
+    };
+
+    fetchTicket();
   }, [id]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  // Enviar actualización (PUT)
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const updatedTicket = {
       title,
-      priority,
       description,
+      status,
+      priority,
     };
 
-    const res = await fetch(`http://localhost:3000/api/tickets/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedTicket),
-    });
+    try {
+      const res = await fetch(`http://localhost:3000/api/tickets/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTicket),
+      });
 
-    if (res.ok) {
+      if (!res.ok) {
+        throw new Error("Error al actualizar el ticket");
+      }
+
       navigate("/tickets");
-    } else {
-      alert("Error al actualizar el ticket");
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al actualizar el ticket");
     }
-  }
-
-  if (loading) return <p className="form-help">Cargando...</p>;
+  };
 
   return (
-    <div className="glass-card form-card">
-      <h1 className="page-title">Editar Ticket #{id}</h1>
+    <div className="glass-card form-card max-w-xl mx-auto p-8 rounded-2xl shadow-lg">
+      <h1 className="page-title mb-6 text-center">Editar Ticket</h1>
 
-      <form onSubmit={handleSubmit} className="form-stack">
-        <div className="form-group">
-          <label className="form-label">Título</label>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+        <div className="flex flex-col gap-2">
+          <label className="font-semibold text-gray-700">Título</label>
           <input
             type="text"
-            className="dark-field"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            className="input-field"
           />
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Prioridad</label>
-          <select
-            className="dark-field"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option>Alta</option>
-            <option>Media</option>
-            <option>Baja</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Descripción</label>
+        <div className="flex flex-col gap-2">
+          <label className="font-semibold text-gray-700">Descripción</label>
           <textarea
-            className="dark-field"
-            rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            className="input-field h-28 resize-none"
           />
         </div>
 
-        <button type="submit" className="primary-btn">
-          Guardar cambios
+        <div className="grid grid-cols-2 gap-5">
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold text-gray-700">Estado</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="input-field"
+            >
+              <option value="open">Abierto</option>
+              <option value="pending">Pendiente</option>
+              <option value="closed">Cerrado</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold text-gray-700">Prioridad</label>
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="input-field"
+            >
+              <option value="low">Baja</option>
+              <option value="medium">Media</option>
+              <option value="high">Alta</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" className="primary-btn w-full mt-4">
+          Guardar Cambios
         </button>
       </form>
     </div>

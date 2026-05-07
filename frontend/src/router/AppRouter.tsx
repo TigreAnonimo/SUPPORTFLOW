@@ -6,7 +6,7 @@ import TicketDetail from "../pages/TicketDetail";
 import MainLayout from "../layout/MainLayout";
 import NewTicket from "../pages/NewTicket";
 import EditTicket from "../pages/EditTicket";
-
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRouter() {
   return (
@@ -16,13 +16,18 @@ export default function AppRouter() {
         <Route path="/" element={<Login />} />
 
         {/* Rutas privadas */}
-        <Route element={<MainLayout />}>
+        <Route
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/tickets/new" element={<NewTicket />} />
           <Route path="/tickets/:id" element={<TicketDetail />} />
           <Route path="/tickets/edit/:id" element={<EditTicket />} />
-
         </Route>
       </Routes>
     </BrowserRouter>
