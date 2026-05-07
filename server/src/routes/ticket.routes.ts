@@ -3,6 +3,10 @@ import { TicketController } from "../controllers/ticket.controller";
 
 const router = Router();
 
+// ⭐ RUTA DE ESTADÍSTICAS (debe ir antes de /:id)
+router.get("/stats/all", TicketController.getStats);
+
+// CRUD principal
 router.get("/", TicketController.getAll);
 router.get("/:id", TicketController.getById);
 router.post("/", TicketController.create);

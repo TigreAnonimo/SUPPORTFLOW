@@ -54,4 +54,14 @@ export const TicketController = {
       res.status(500).json({ error: "Error al eliminar el ticket" });
     }
   },
+
+  // ⭐ NUEVO: estadísticas para el Dashboard
+  async getStats(req: Request, res: Response) {
+    try {
+      const stats = await TicketModel.getStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Error al obtener estadísticas" });
+    }
+  },
 };

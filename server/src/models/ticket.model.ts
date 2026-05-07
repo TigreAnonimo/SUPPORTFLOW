@@ -1,14 +1,5 @@
 import { pool } from "../db";
 
-export interface Ticket {
-  id?: number;
-  title: string;
-  description: string;
-  status: string;
-  priority: string;
-  created_at?: Date;
-}
-
 export const TicketModel = {
   async getAll() {
     const [rows] = await pool.query("SELECT * FROM tickets");
@@ -20,26 +11,42 @@ export const TicketModel = {
     return rows;
   },
 
-  async create(ticket: Ticket) {
+  async create(ticket: any) {
     const { title, description, status, priority } = ticket;
+
     const [result]: any = await pool.query(
       "INSERT INTO tickets (title, description, status, priority) VALUES (?, ?, ?, ?)",
       [title, description, status, priority]
     );
+
     return { id: result.insertId, ...ticket };
   },
 
-  async update(id: number, ticket: Ticket) {
+  async update(id: number, ticket: any) {
     const { title, description, status, priority } = ticket;
+
     await pool.query(
-      "UPDATE tickets SET title=?, description=?, status=?, priority=? WHERE id=?",
+      "UPDATE tickets SET title = ?, description = ?, status = ?, priority = ? WHERE id = ?",
       [title, description, status, priority, id]
     );
+
     return { id, ...ticket };
   },
 
   async delete(id: number) {
     await pool.query("DELETE FROM tickets WHERE id = ?", [id]);
-    return true;
+  },
+
+  // ⭐ NUEVO: estadísticas para el Dashboard
+  async getStats() {
+    const [rows]: any = await pool.query(`
+      SELECT 
+        SUM(status = 'open') AS open,
+        SUM(status = 'closed') AS closed,
+        SUM(status = 'pending') AS pending
+      FROM tickets
+    `);
+
+    return rows[0];
   },
 };
