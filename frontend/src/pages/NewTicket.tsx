@@ -44,35 +44,47 @@ export default function NewTicket() {
     <div className="glass-card form-card">
       <h1 className="page-title">Crear Ticket</h1>
 
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleSubmit} className="ticket-form">
+        <div>
         <label>Título</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          placeholder="Ej. Error de acceso al panel de cliente"
           required
         />
+        </div>
 
+        <div>
         <label>Descripción</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          placeholder="Describe el problema con el mayor detalle posible..."
           required
         />
+        </div>
 
-        <label>Estado</label>
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="open">Abierto</option>
-          <option value="pending">Pendiente</option>
-          <option value="closed">Cerrado</option>
-        </select>
+        <div className="ticket-form-row">
+          <div>
+            <label>Estado</label>
+            <select value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option value="open">Abierto</option>
+              <option value="pending">Pendiente</option>
+              <option value="closed">Cerrado</option>
+            </select>
+          </div>
 
-        <label>Prioridad</label>
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <option value="low">Baja</option>
-          <option value="medium">Media</option>
-          <option value="high">Alta</option>
-        </select>
+          <div>
+            <label>Prioridad</label>
+            <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+              <option value="low">Baja</option>
+              <option value="medium">Media</option>
+              <option value="high">Alta</option>
+            </select>
+          </div>
+        </div>
 
         <button type="submit" className="primary-btn">
           Crear Ticket

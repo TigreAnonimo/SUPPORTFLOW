@@ -72,40 +72,44 @@ export default function Tickets() {
         </button>
       </div>
 
-      <div className="glass-card tickets-table-wrap">
-        <table className="tickets-table">
-          <thead>
+      <div className="glass-card tickets-table-wrap shadow-lg rounded-xl overflow-hidden">
+        <table className="tickets-table w-full">
+          <thead className="bg-gray-100/95 text-gray-700 text-sm uppercase tracking-wide">
             <tr>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Estado</th>
-              <th>Prioridad</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
+              <th className="p-3 text-left">ID</th>
+              <th className="p-3 text-left">Título</th>
+              <th className="p-3 text-left">Estado</th>
+              <th className="p-3 text-left">Prioridad</th>
+              <th className="p-3 text-left">Fecha</th>
+              <th className="p-3 text-left">Acciones</th>
             </tr>
           </thead>
 
           <tbody>
             {tickets.map((ticket) => (
-              <tr key={ticket.id}>
-                <td>{ticket.id}</td>
-                <td>{ticket.title}</td>
+              <tr
+                key={ticket.id}
+                className="border-b border-white/5 hover:bg-white/5 transition-colors"
+              >
+                <td className="p-3">{ticket.id}</td>
+                <td className="p-3 font-semibold text-slate-100">{ticket.title}</td>
 
-                <td>
+                <td className="p-3">
                   <span className={`pill pill-${ticket.status}`}>
                     {ticket.status}
                   </span>
                 </td>
 
-                <td>
+                <td className="p-3">
                   <span className={`pill pill-${ticket.priority}`}>
                     {ticket.priority}
                   </span>
                 </td>
 
-                <td>{ticket.date}</td>
+                <td className="p-3">{ticket.date}</td>
 
-                <td className="row-actions">
+                <td className="p-3">
+                  <div className="row-actions">
                   <button
                     onClick={() => navigate(`/tickets/${ticket.id}`)}
                     className="action-link"
@@ -122,10 +126,11 @@ export default function Tickets() {
 
                   <button
                     onClick={() => handleDelete(ticket.id)}
-                    className="action-link"
+                    className="action-link text-red-600 hover:text-red-800"
                   >
                     Eliminar
                   </button>
+                  </div>
                 </td>
               </tr>
             ))}

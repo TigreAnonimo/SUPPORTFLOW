@@ -72,6 +72,7 @@
   width: 100%;
   border-collapse: collapse;
   min-width: 760px;
+  font-variant-numeric: tabular-nums;
 }
 
 .tickets-table thead th {
@@ -86,10 +87,11 @@
 }
 
 .tickets-table tbody td {
-  padding: 0.9rem 1rem;
+  padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   color: #e2e8f0;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+  vertical-align: middle;
 }
 
 .tickets-table tbody tr:hover {
@@ -151,8 +153,9 @@
   background: transparent;
   color: #a5b4fc;
   cursor: pointer;
-  padding: 0;
+  padding: 0.15rem 0;
   font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .action-link:hover {
@@ -162,7 +165,70 @@
 .form-card {
   max-width: 680px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1.75rem;
+}
+
+.ticket-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+  margin-top: 1rem;
+}
+
+.ticket-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #dbe3f0;
+  margin-bottom: 0.3rem;
+  display: inline-block;
+}
+
+.ticket-form input,
+.ticket-form textarea,
+.ticket-form select {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(15, 23, 42, 0.45);
+  color: #f8fafc;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.ticket-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.ticket-form input::placeholder,
+.ticket-form textarea::placeholder {
+  color: #94a3b8;
+}
+
+.ticket-form input:focus,
+.ticket-form textarea:focus,
+.ticket-form select:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22);
+  background: rgba(30, 41, 59, 0.55);
+}
+
+.ticket-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.description-card {
+  background: rgba(248, 250, 252, 0.96);
+  color: #1f2937;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 14px;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+  padding: 1rem 1.1rem;
+  line-height: 1.65;
 }
 
 .form-stack {
@@ -211,6 +277,10 @@
 
 @media (max-width: 900px) {
   .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-form-row {
     grid-template-columns: 1fr;
   }
 }
