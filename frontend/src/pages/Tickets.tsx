@@ -12,6 +12,8 @@ interface Ticket {
 
 export default function Tickets() {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Lista de tickets mostrada en la tabla principal.
   const [tickets, setTickets] = useState<Ticket[]>([]);
 
@@ -19,7 +21,7 @@ export default function Tickets() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/tickets");
+        const res = await fetch(`${API_URL}/api/tickets`);
         const data = await res.json();
 
         const formatted = data.map((t: any) => ({
@@ -34,7 +36,7 @@ export default function Tickets() {
     };
 
     fetchTickets();
-  }, []);
+  }, [API_URL]);
 
   // Validación de sesión
   useEffect(() => {
@@ -48,7 +50,7 @@ export default function Tickets() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/tickets/${id}`, {
+      const res = await fetch(`${API_URL}/api/tickets/${id}`, {
         method: "DELETE",
       });
 
@@ -111,7 +113,6 @@ export default function Tickets() {
                 <td className="p-3">{ticket.date}</td>
 
                 <td className="p-3">
-                  {/* Acciones disponibles para cada fila del listado */}
                   <div className="row-actions">
                     <button
                       onClick={() => navigate(`/tickets/${ticket.id}`)}

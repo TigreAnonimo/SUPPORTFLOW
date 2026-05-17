@@ -6,13 +6,15 @@ export default function TicketDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Estado del ticket cargado y bandera para manejar estado de carga.
   const [ticket, setTicket] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   // Carga la información de un ticket específico por ID.
   useEffect(() => {
-    fetch(`http://localhost:3000/api/tickets/${id}`)
+    fetch(`${API_URL}/api/tickets/${id}`)
       .then((res) => res.json())
       .then((data) => {
         // Backend devuelve array → tomamos el primer elemento
@@ -23,7 +25,7 @@ export default function TicketDetail() {
         console.error("Error cargando ticket:", err);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, API_URL]);
 
   // Estados de UI para carga o ausencia de datos.
   if (loading) {

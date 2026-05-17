@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [stats, setStats] = useState({
     open: 0,
     closed: 0,
@@ -18,7 +20,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/tickets/stats/all");
+        const res = await fetch(`${API_URL}/api/tickets/stats/all`);
         const data = await res.json();
         setStats(data);
       } catch (error) {
@@ -27,7 +29,7 @@ export default function Dashboard() {
     };
 
     fetchStats();
-  }, []);
+  }, [API_URL]);
 
   return (
     <div>

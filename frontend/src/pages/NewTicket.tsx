@@ -5,6 +5,8 @@ import "./AppPages.css";
 export default function NewTicket() {
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Estado del formulario para crear un ticket nuevo.
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -15,7 +17,6 @@ export default function NewTicket() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Payload que espera el endpoint de creación.
     const newTicket = {
       title,
       description,
@@ -24,7 +25,7 @@ export default function NewTicket() {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/tickets", {
+      const res = await fetch(`${API_URL}/api/tickets`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +44,6 @@ export default function NewTicket() {
     }
   };
 
-  // Estructura visual del formulario con campos principales del ticket.
   return (
     <div className="glass-card form-card">
       <h1 className="page-title">Crear Ticket</h1>

@@ -6,6 +6,8 @@ export default function EditTicket() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Estado del formulario pre-cargado con la data actual del ticket.
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -16,7 +18,7 @@ export default function EditTicket() {
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/tickets/${id}`);
+        const res = await fetch(`${API_URL}/api/tickets/${id}`);
         const data = await res.json();
 
         setTitle(data[0].title);
@@ -29,13 +31,12 @@ export default function EditTicket() {
     };
 
     fetchTicket();
-  }, [id]);
+  }, [id, API_URL]);
 
   // Enviar actualización (PUT)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Payload con los campos editables del ticket.
     const updatedTicket = {
       title,
       description,
@@ -44,7 +45,7 @@ export default function EditTicket() {
     };
 
     try {
-      const res = await fetch(`http://localhost:3000/api/tickets/${id}`, {
+      const res = await fetch(`${API_URL}/api/tickets/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +64,6 @@ export default function EditTicket() {
     }
   };
 
-  // Formulario de edición para actualizar información del ticket.
   return (
     <div className="glass-card form-card max-w-xl mx-auto p-8 rounded-2xl shadow-lg">
       <h1 className="page-title mb-6 text-center">Editar Ticket</h1>
